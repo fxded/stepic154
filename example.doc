@@ -1,0 +1,81 @@
+replace path (repl.sh)
+
+ROOT=$1
+
+if [ -z $ROOT ]
+then
+  echo "setup root folder of project as first argument"
+  exit
+fi
+
+echo $ROOT | sed 's/\//\\\\\\\//g' | \
+xargs -n 1 -i% sed 's/#R/%/g' \
+$ROOT/etc/project.conf.template > $ROOT/etc/project.conf
+
+usage:
+
+bash repl.sh 'pwd' 
+#$ROOT/etc/project.conf.template, и на его основе создат файл $ROOT/etc/project.conf
+
+
+nginx conf
+
+server {
+  listen 80;
+  root #R;
+  location /hello/ {
+    proxy_pass http://127.0.0.1:8080;
+  }
+
+  location / {
+    return 404;
+  }
+}
+То есть запуская скрипт локально строка root #R; превратится в что-то вроде root /home/vt-egorov/workspace/stepik/web/webserver;,
+
+а в терминале при сдаче задания - в root /home/box/web;
+
+----------------------------
+another example
+
+#!/bin/bash
+
+addr=$(pwd)
+files=(/etc/nginx.conf)
+for f in ${files[@]}; do
+        sed -ri "s!\S*/web!${addr}!g" ${addr}${f}
+done
+
+sudo ln -sf ${addr}/etc/nginx.conf /etc/nginx/sites-enabled/default
+sudo /etc/init.d/nginx restart
+--------------------------------------
+Краткая инструкция по приготовлению к прохождению задания:
+
+Заводим аккаунт на github.com, заводим репозиторий, пусть он называется %reponame%, а ваш ник %username%, соглашаемся его инициализировать. На виртуальной машине создаем папку web (mkdir web) и переходим в нее (cd web)
+
+git clone https://github.com/%username%/%reponame%.git
+Создаем init.sh (touch init.sh), прописываем ему права на выполнение (chmod a+x init.sh), создаем папку etc (mkdir etc), копируем туда дефолтный конфиг, он поможет в дальнейшем (cp /etc/nginx/nginx.conf ~/web/etc).
+
+Теперь займемся обустройством git'a. Каждый раз для заливки данных в git нужно будет сперва добавить файлы в коммит (git add *), затем создать коммит локально (git commit -a -m "Описание коммита"), и, наконец, залить его в оригинальный репозиторий (git push). На этом месте не забудьте ваш логин пароль от github'а.
+
+Git может пожаловаться на отсутствие локальных имени и пароля, напомните ему их:
+
+git config --global user.name %username%
+git config --global user.email %useremail%
+Подготовительный этап окончен! Теперь можете выкачивать репозиторий через удобный клиент (я предпочитаю smartgit) на своем компьютере, править и добавлять файлы, а затем заливать обратно (соответствующие кнопочки commit и push в интерфейсе). На виртуальной машине пользуйтесь командой git pull для подтягивания залитых с локальной машины изменений и наоборот.
+
+Какой минимальный набор конфигурации в nginx? В дефолтной конфигурации nginx оставлять можно только events как есть и пустую директиву http, остальное можно написать, руководствуясь курсом. Если кажется, что nginx не запущен (ps aux | grep nginx покажет все процессы с соответствующими названиями) или запущен с некорректной конфигурацией, проверить ее можно с помощью команды nginx -t.
+
+Как проверить локально, что требования задания выполнены? Залейте какой-нибудь файл в папку public и запросите его с помощью curl -I http://localhost:80/some.file, по заголовку ответа можно будет понять, как среагировал nginx. Если непонятно, почему он отдает 404 там, где должен быть файл (то есть код 200), допишите директиву error_log и загляните в этот лог, скорее всего проблема сразу локализуется.
+
+Надеюсь, не раскрыл слишком много карт и надеюсь что этот пост поможет многим не столь опытным коллегам в прохождении всего курса и этого шага в частности!
+--------------------------------------
+links
+https://www.codecademy.com/learn/learn-git
+
+Видеоуроки GIT
+
+https://www.youtube.com/watch?v=PEKN8NtBDQ0
+
+regexp
+https://tproger.ru/articles/regexp-for-beginners/

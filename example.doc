@@ -79,3 +79,12 @@ https://www.youtube.com/watch?v=PEKN8NtBDQ0
 
 regexp
 https://tproger.ru/articles/regexp-for-beginners/
+---------------------------------------------
+
+1) git clone ... ( /home/box/web/etc/nginx.conf - это копия файла /etc/nginx/nginx. conf);
+1.1) чтобы на github попали пустые папки добавил в каждую из них пустой файл с названием .gitkeep;
+2) sudo ln -sf /home/box/web/etc/nginx.conf /etc/nginx/nginx.conf - делаем ссылку;
+3) sudo rm -rf /etc/nginx/sites-enabled/default - этот файл портил все карты, удалил его чтобы не мешал;
+4) в  /home/box/web/etc/nginx.conf  файл в блок "http" добавил блок "server" c location;
+5) sudo nginx -t (проверяем conf на наличие ошибок);
+6) sudo /etc/init.d/nginx restart;

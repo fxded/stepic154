@@ -6,4 +6,4 @@ services:
                 ports:
                         - 9080:80
                 volumes:
-                        - .:/var/www/html
+                        - .:/home/box/web

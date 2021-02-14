@@ -19,7 +19,8 @@ services:
                 expose:
                         - 8080
                 ports:
-                        -8080:8080
+                        - 8080:8080
                 volumes:
                         - .:/home/box/web
-                command: "gunicorn -c gunicorn.py hello.wsgi"
+                command: 'gunicorn -b 0.0.0.0:8080 --log-file /var/log/err_guni_logs.log   --access-logfile /var/log/access_guni_logs.log hello:resp_app'
+                #command: "gunicorn -c gunicorn.py hello.wsgi"

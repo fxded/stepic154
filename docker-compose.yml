@@ -1,9 +1,25 @@
 version: '3'
 services:
-        stepik154:
+        nginx:
+                restart: always
                 build:
                         context: .
+                        dockerfile: Dockerfile
                 ports:
                         - 9080:80
                 volumes:
                         - .:/home/box/web
+                depends_on:
+                        - python
+        python:
+                restart: always
+                build:
+                        context: .
+                        dockerfile: python/Dockerfile
+                expose:
+                        - 8080
+                ports:
+                        -8080:8080
+                volumes:
+                        - .:/home/box/web
+                command: "gunicorn -c gunicorn.py hello.wsgi"

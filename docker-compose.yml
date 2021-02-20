@@ -6,7 +6,7 @@ services:
                         context: .
                         dockerfile: Dockerfile
                 ports:
-                        - 9080:80
+                        - 80:80
                 volumes:
                         - .:/home/box/web
                 depends_on:
@@ -22,5 +22,6 @@ services:
                         - 8080:8080
                 volumes:
                         - .:/home/box/web
-                command: 'gunicorn -b 0.0.0.0:8080 --log-file /var/log/err_guni_logs.log   --access-logfile /var/log/access_guni_logs.log hello:resp_app'
+                command: "gunicorn -b 0.0.0.0:8080 hello:resp_app"
+                #command: 'gunicorn -b 0.0.0.0:8080 --log-file /var/log/err_guni_logs.log   --access-logfile /var/log/access_guni_logs.log hello:resp_app'
                 #command: "gunicorn -c gunicorn.py hello.wsgi"

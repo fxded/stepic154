@@ -11,6 +11,7 @@ services:
                         - .:/home/box/web
                 depends_on:
                         - python
+                        - django 
         python:
                 restart: always
                 build:
@@ -25,3 +26,17 @@ services:
                 command: "gunicorn -b 0.0.0.0:8080 hello:resp_app"
                 #command: 'gunicorn -b 0.0.0.0:8080 --log-file /var/log/err_guni_logs.log   --access-logfile /var/log/access_guni_logs.log hello:resp_app'
                 #command: "gunicorn -c gunicorn.py hello.wsgi"
+        django:
+                restart: always
+                build:
+                        context: .
+                        dockerfile: python/django/Dockerfile
+                expose:
+                        - 8000
+                ports:
+                        - 8000:8000
+                volumes:
+                        - .:/home/box/web
+                command: sh -c "cd ask && gunicorn -b 0.0.0.0:8000 ask.wsgi"
+                #command: sh -c "django-admin startproject ask && gunicorn -b 0.0.0.0:8000 ask.wsgi"
+                #command: "vim requirements.txt"

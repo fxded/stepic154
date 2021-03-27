@@ -5,7 +5,9 @@ WORKDIR /home/box/web
 COPY ./python/django /home/box/web
 #COPY ./hello.py /home/box/web
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt && \
+	cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
+	echo "Europe/Moscow" > /etc/timezone
 #RUN django-admin startproject ask
 #RUN gunicorn -b localhost:8000 myapp:app
 #RUN gunicorn myapp:app

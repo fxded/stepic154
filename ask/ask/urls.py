@@ -20,7 +20,7 @@ from qa import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.test, name='root'),
+    path('', views.root_views, name='root'),
     path('login/', views.test, name='login'),
     path('signup/', views.test, name='singup'),
     path('question/<int:id>', views.test, name='question'),

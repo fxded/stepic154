@@ -1,4 +1,6 @@
 sudo rm -rf /etc/nginx/conf.d/default
+sed -i -e "s/\python/localhost/g" etc/nginx.conf
+sed -i -e "s/\django/localhost/g" etc/nginx.conf
 sudo ln -sf /home/box/web/etc/nginx.conf /etc/nginx/conf.d/default
 sudo ln -sf /home/box/web/etc/nginx.conf /etc/nginx/sites-enabled/default
 sudo ln -sf /home/box/web/etc/nginx.conf /etc/nginx/sites-available/default
